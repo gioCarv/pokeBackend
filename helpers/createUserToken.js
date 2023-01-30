@@ -11,25 +11,25 @@ const createUserToken = async (user, pokemon, req, res) => {
         pokeNumber = pokemon.pokeNumber
     }else{
         pokeNumber = ''
-
+        
     }
-
-
-
+    
+    
     const payload = {
         name: user.name,
         id: user._id,
         pokeNumber: pokeNumber,
-}
+        adm: user.adm,
+    }
     const options = { expiresIn: '1d'}
-
+    
     const token = jwt.sign( payload, authSecret, options )
-
+    
     res.status(200).json({
         message: "Você está autenticado!",
         token: token,
         userId: user._id,
-      });
+    });
 }
 
 module.exports = createUserToken

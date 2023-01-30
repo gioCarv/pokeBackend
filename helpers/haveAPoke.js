@@ -1,8 +1,8 @@
 const pokemons = require('../models/pokemons')
 
-const haveAPoke = (_id) => {
+const haveAPoke = async (_id) => {
 
-    const pokemon = pokemons.getpokemonbyID(_id)
+    const pokemon = await pokemons.getpokemonbyID(_id)
 
     return pokemon
 

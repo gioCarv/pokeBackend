@@ -13,16 +13,12 @@ const authSecret = process.env.AUTHSECRET || "4UTH_s3CR3T_d3V_t1M3"
 
 module.exports = class PokemonsController {
 
-  // static async getAll(req, res) {
+  static async getAll(req, res) {
 
-  //   const data = await User.getUsers()
-    
-  //   data.forEach(user => {
-  //     delete user.password
-  //   })
+    const data = await pokemons.getpokemons()
 
-  //   await res.json(data)
-  // }
+    await res.json(data)
+  }
 
   static async register(req, res) {
     const { pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty } = req.body
@@ -30,11 +26,15 @@ module.exports = class PokemonsController {
     const token = getToken(req)
 
     const decoded = jwt.verify(token, authSecret);
-    console.log(decoded)
 
     const _id = decoded.id
 
-    console.log(_id)
+    const exist = await pokemons.getpokemonbyID(_id)
+
+    if(!!exist){
+      res.status(422).json({ message: 'Você já adotou um pokemon' })
+      return
+    }
     
     const pokemon = new pokemons(_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty)
     
@@ -46,26 +46,31 @@ module.exports = class PokemonsController {
 
   }
 
-  // static async login(req, res) {
+  static async uptdatePoke(req, res) {
 
-  //   const email = req.body.email
-  //   const password = req.body.password
-
-  //   const user = await User.getUserbyEmail(email)
-  //   if(!user){
-  //     res.status(422).json({ message: 'Email invalido' })
-  //     return
-  //   }
-  //   const Ismatch = await bcrypt.compare(password, user.password)
+    const payload = req.user
+    const id = payload.id
+    const object = req.body.object
     
-  //   if (!Ismatch){
-  //     res.status(422).json({ message: 'Senha invalida' })
-  //     return
-  //   }
-
-  //   await createUserToken(user, req, res)
+    try{
+      const pokemon = await pokemons.uptdatePokemon(id, object)
+      res.send({message: "Atualização realizada com sucesso", pokemon})
+      
+    }catch(e){
+      console.log(e)
+      res.send(e)
+    }
     
-  // }
+  }
+
+  static async topLvl(req, res) {
+
+    const top3 = await pokemons.pokemonsSortedByLvl()
+    console.log(top3)
+
+    res.json(top3)
+    
+  }
 
 
 

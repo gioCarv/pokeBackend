@@ -1,5 +1,4 @@
 const conn = require('../db/conn')
-const { ObjectId } = require('mongodb')
 
 
 class pokemons {
@@ -46,17 +45,21 @@ class pokemons {
         return pokemon
     }
     static async getpokemonbyID(value){
-        const pokemon = await conn.db().collection('adoptedPoke').findOne({ _id: new ObjectId(value)} )
+        const pokemon = await conn.db().collection('adoptedPoke').findOne({ _id: value} )
         return pokemon
     }
     static async getpokemonbyEmail(value){
         const pokemon = await conn.db().collection('adoptedPoke').findOne({email: value} )
         return pokemon
     }
-    // static async getpokemonbyLogin(email, password){
-    //   const pokemon = await conn.db().collection('adoptedPoke').findOne({ email: email, password: password });
-    //   return pokemon
-    // }
+    static async uptdatePokemon(id, updatedData){
+      const pokemon = await conn.db().collection('adoptedPoke').updateOne({_id: id}, { $set: updatedData })
+      return pokemon
+    }
+    static async pokemonsSortedByLvl(){
+      const pokemons = await conn.db().collection('adoptedPoke').find().limit(3).sort({"level": -1}).toArray()
+      return pokemons
+    }
     
 }
 

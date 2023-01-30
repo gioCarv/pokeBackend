@@ -4,19 +4,21 @@ const { ObjectId } = require('mongodb')
 
 class user {
 
-    constructor(email, name, password){
+    constructor(email, name, password, adm){
         
         this.name = name
         this.email = email
         this.password = password
+        this.adm = adm
 
     }
 
-    static save({name, email, password}) {
+    static save({name, email, password, adm}) {
         const user = conn.db().collection('userspoke').insertOne({
           name,
           email,
           password,
+          adm,
         })
     
         return user
@@ -38,7 +40,7 @@ class user {
         return user
     }
     static async getUserbyID(value){
-      const User = await conn.db().collection('userspoke').findOne({ _id: ObjectId(value)} )
+      const User = await conn.db().collection('userspoke').findOne({ _id: new ObjectId(value)} )
       return User
   }
 

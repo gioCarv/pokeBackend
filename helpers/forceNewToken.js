@@ -1,24 +1,36 @@
 const createUserToken = require('./createUserToken')
-const pokemons = require('../models/pokemons')
 const users = require('../models/users')
-// const validationUserToken = require('./validationUserToken')
+const haveAPoke = require('./haveAPoke')
 
 //verify => cria
-//Aqui você força a criação de um novo token, para aplicar nas evoluções, escolha de personagens, a principal diferença é q aqui vc não recebe parametros
-const ForceNewToken = (req, res) =>{
+//Aqui você força a criação de um novo token, para aplicar nas evoluções, apos escolha de pokemons, e renovação de token a principal diferença é q aqui vc não recebe parametros
+const ForceNewToken = async (req, res) =>{
 
+    const payload = req.user
+    console.log(payload)
+    const pokemon = await haveAPoke(payload.id)
 
-    const pokemon = pokemons.getpokemonbyID(payload._id)
+    const user = await users.getUserbyID(payload.id) 
 
-    
+    createUserToken(user, pokemon, req, res)
 
-    if(pokemon){
-
-    }
 }
 
 
+module.exports = ForceNewToken
 
 
 
-module.exports = createUserToken
+
+
+
+
+
+
+
+
+
+
+
+
+

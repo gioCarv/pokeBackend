@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt');
+const { ObjectId } = require('mongodb')
 
 const User = require('../models/users')
 
 const createUserToken = require('../helpers/createUserToken')
-const haveAPoke = require('../helpers/haveAPoke')
+const haveAPoke = require('../helpers/haveAPoke');
+const { getUserbyID } = require('../models/users');
 
 require('dotenv').config();
 
@@ -32,7 +34,8 @@ module.exports = class UserController {
 
     const data = await User.getUserbyID(id)
 
-    console.log(data)
+    delete data.password
+
     res.json( data )
   }
 
@@ -78,9 +81,11 @@ module.exports = class UserController {
     const salt = bcrypt.genSaltSync(10);
     const encryptedPassword = bcrypt.hashSync(password, salt);
 
-    const user = new User(email, name, encryptedPassword)
+    const user = new User(email, name, encryptedPassword, false)
 
     await User.save(user)
+
+    delete user.password
 
     await res.json(user)
 
@@ -102,10 +107,8 @@ module.exports = class UserController {
       res.status(422).json({ message: 'Senha invalida' })
       return
     }
-
-    const PokeInfo = await haveAPoke(user._id)
-
-    console.log(PokeInfo)
+    
+    const PokeInfo = await haveAPoke(user._id.toString())
 
     await createUserToken(user, PokeInfo, req, res)
     

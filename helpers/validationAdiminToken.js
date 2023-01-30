@@ -1,25 +1,23 @@
-const express = require('express')
 const jwt = require('jsonwebtoken')
-
 
 require('dotenv').config();
 
 const authSecret = process.env.AUTHSECRET || "4UTH_s3CR3T_d3V_t1M3"
 
-const validateToken = (req, res, next) => {
+const validateAdiminToken = (req, res, next) => {
 
     const authHeader = req.headers.authorization || ''
-    // console.log(authHeader)
-    const token = authHeader.split(" ")[1]
-    // console.log(token)
 
+    const token = authHeader.split(" ")[1]
 
     try {
         const payload = jwt.verify(token, authSecret);
-        // console.log(payload)
-        // res.json({payload})
-        req.user = payload;
-        next()
+        if(payload.adm == true){
+            next()
+        }else{
+            res.json({ message: "Somente administradores podem acessar essa pagina"})
+            return
+        }
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
             // the token has expired
@@ -33,4 +31,4 @@ const validateToken = (req, res, next) => {
     }
 }
 
-module.exports = validateToken
+module.exports = validateAdiminToken
