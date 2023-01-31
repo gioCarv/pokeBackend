@@ -11,8 +11,9 @@ const userInfo = async (req, res) => {
     
     const infoPoke = await haveAPoke(payload.id)
     
-    delete infoPoke._id
-
+    if(!!infoPoke){
+        delete infoPoke._id
+    }
     const Allinfo = {
         infoUser,
         infoPoke

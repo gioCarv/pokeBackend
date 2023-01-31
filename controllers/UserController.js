@@ -40,7 +40,7 @@ module.exports = class UserController {
   }
 
   static async register(req, res) {
-    const { name, email, password, confirmPassword } = req.body
+    const { name, email, password, confirmPassword, pic } = req.body
 
     // if (!email) {
     //   res.status(422).json({ message: "O campo email é obrigatorio " })
@@ -81,7 +81,7 @@ module.exports = class UserController {
     const salt = bcrypt.genSaltSync(10);
     const encryptedPassword = bcrypt.hashSync(password, salt);
 
-    const user = new User(email, name, encryptedPassword, false)
+    const user = new User(email, name, encryptedPassword, false, pic)
 
     await User.save(user)
 

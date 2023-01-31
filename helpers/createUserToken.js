@@ -20,6 +20,7 @@ const createUserToken = async (user, pokemon, req, res) => {
         id: user._id,
         pokeNumber: pokeNumber,
         adm: user.adm,
+        pic: user.pic
     }
     const options = { expiresIn: '1d'}
     

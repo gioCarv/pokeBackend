@@ -4,21 +4,23 @@ const { ObjectId } = require('mongodb')
 
 class user {
 
-    constructor(email, name, password, adm){
+    constructor(email, name, password, adm, pic){
         
         this.name = name
         this.email = email
         this.password = password
         this.adm = adm
+        this.pic = pic
 
     }
 
-    static save({name, email, password, adm}) {
+    static save({name, email, password, adm, pic}) {
         const user = conn.db().collection('userspoke').insertOne({
           name,
           email,
           password,
           adm,
+          pic
         })
     
         return user

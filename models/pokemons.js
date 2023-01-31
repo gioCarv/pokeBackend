@@ -3,7 +3,7 @@ const conn = require('../db/conn')
 
 class pokemons {
 
-    constructor(_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty){
+    constructor(_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty, pokeName){
         
         this._id = _id
         this.pokeNumber = pokeNumber
@@ -14,10 +14,11 @@ class pokemons {
         this.healthDifficulty = healthDifficulty
         this.damageDifficulty = damageDifficulty
         this.speedDifficulty = speedDifficulty
+        this.pokeName = pokeName
 
     }
 
-    static save({_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty}) {
+    static save({_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty, pokeName}) {
         const pokemon = conn.db().collection('adoptedPoke').insertOne({
           _id,
           pokeNumber,
@@ -28,6 +29,7 @@ class pokemons {
           healthDifficulty,
           damageDifficulty,
           speedDifficulty,
+          pokeName,
         })
     
         return pokemon

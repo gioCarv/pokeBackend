@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const pokemons = require('../models/pokemons')
 
+const cache = require('../cache/cache')
 const createUserToken = require('../helpers/createUserToken')
 const getToken = require('../helpers/getToken');
 
@@ -21,7 +22,7 @@ module.exports = class PokemonsController {
   }
 
   static async register(req, res) {
-    const { pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty } = req.body
+    const { pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty, pokeName } = req.body
 
     const token = getToken(req)
 
@@ -36,7 +37,7 @@ module.exports = class PokemonsController {
       return
     }
     
-    const pokemon = new pokemons(_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty)
+    const pokemon = new pokemons(_id, pokeNumber, level ,health, damage, speed, healthDifficulty, damageDifficulty, speedDifficulty, pokeName)
     
     console.log(pokemon)
 
@@ -65,11 +66,14 @@ module.exports = class PokemonsController {
 
   static async topLvl(req, res) {
 
-    const top3 = await pokemons.pokemonsSortedByLvl()
-    console.log(top3)
+    let top3 = await cache.getCache("topLvl")
+    
+    if(!top3){
+      top3 = await pokemons.pokemonsSortedByLvl()
+    }
 
     res.json(top3)
-    
+
   }
 
 
